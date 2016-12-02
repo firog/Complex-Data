@@ -1,0 +1,35 @@
+clearvars -except newXtest newXtrain newTargetXtest newTargetXtrain B MSETaskA
+close all
+
+input1 = B';
+H = 50;
+trainOpt = 'trainscg';
+net = feedforwardnet([50 H 50], trainOpt);
+
+net = train(net, input1, input1);
+output = net(input1);
+
+m = mean(input1);
+tn1 = output*(newXtrain-m');
+yn1 = m' + B*tn1;
+
+tn2 = B'*(newXtrain-m');
+yn2 = m' + B*tn2;
+
+MSETaskE = immse(yn2,newXtrain);
+
+randomIndeces = rand(25,1)*length(input1)-1;
+randomIndeces = int16(randomIndeces);
+figure
+for i=1:25
+    subplot(5,5,i)
+    imshow(reshape(yn1(randomIndeces(i),:),[28,28]))
+end
+
+randomIndeces = rand(25,1)*length(input1)-1;
+randomIndeces = int16(randomIndeces);
+figure
+for i=1:25
+    subplot(5,5,i)
+    imshow(reshape(yn2(randomIndeces(i),:),[28,28]))
+end
